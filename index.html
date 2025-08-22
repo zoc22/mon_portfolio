@@ -1,0 +1,930 @@
+<!DOCTYPE html>
+<html lang="fr" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Portfolio – ZITA Cheridane</title>
+  <meta name="description" content="Portfolio de ZITA Cheridane – Développeuse Web & Robotique. Expériences, compétences, projets, contact." />
+  <meta name="theme-color" content="#3b82f6" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Portfolio – ZITA Cheridane" />
+  <meta property="og:description" content="Développeuse Web & Robotique. Projets, compétences, expériences et contact." />
+  <meta property="og:image" content="https://images.unsplash.com/photo-1521737604893-d14cc237f11d?q=80&w=1200&auto=format&fit=crop" />
+
+  <!-- Police Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Tailwind (CDN) -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    /* Thème Tailwind : Blanc/Bleu */
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Inter', 'ui-sans-serif', 'system-ui'] },
+          colors: {
+            brand: {
+              50:  '#f5f9ff',
+              100: '#eaf2ff',
+              200: '#cfe4ff',
+              300: '#a8cfff',
+              400: '#72b3ff',
+              500: '#3b82f6', /* bleu principal */
+              600: '#2563eb',
+              700: '#1d4ed8',
+              800: '#1e40af',
+              900: '#1e3a8a'
+            }
+          },
+          boxShadow: {
+            soft: '0 10px 30px rgba(59,130,246,.18)',
+            card: '0 10px 20px rgba(2, 6, 23, 0.08)'
+          },
+          animation: {
+            float: 'float 7s ease-in-out infinite',
+            glow: 'glow 3s ease-in-out infinite',
+            dash: 'dash 12s linear infinite',
+            fadeUp: 'fadeUp .8s both'
+          },
+          keyframes: {
+            float: {
+              '0%,100%': { transform: 'translateY(0)' },
+              '50%': { transform: 'translateY(-10px)' }
+            },
+            glow: {
+              '0%,100%': { boxShadow: '0 0 0 0 rgba(59,130,246,.0)' },
+              '50%': { boxShadow: '0 0 0 10px rgba(59,130,246,.06)' }
+            },
+            dash: {
+              '0%': { backgroundPosition: '0% 50%' },
+              '100%': { backgroundPosition: '200% 50%' }
+            },
+            fadeUp: {
+              '0%': { opacity: 0, transform: 'translateY(16px)' },
+              '100%': { opacity: 1, transform: 'translateY(0)' }
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Flowbite -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.css" rel="stylesheet" />
+
+  <style>
+    /* ==== Animations custom & helpers ==== */
+    .reveal{opacity:0;transform:translateY(22px) scale(.98);transition:all .8s cubic-bezier(.2,.6,.2,1)}
+    .reveal.show{opacity:1;transform:translateY(0) scale(1)}
+    .hover-lift{transition:transform .35s ease, box-shadow .35s ease}
+    .hover-lift:hover{transform:translateY(-6px);box-shadow:0 16px 36px rgba(2,6,23,.12)}
+    .tilt{transform-style:preserve-3d;will-change:transform}
+
+    /* Fond héro + bulles de parallaxe */
+    .bg-hero{background:
+      radial-gradient(800px 400px at 10% 10%, rgba(59,130,246,.12), transparent 60%),
+      radial-gradient(700px 380px at 90% -5%, rgba(37,99,235,.10), transparent 65%)}
+    .parallax-bubble{position:absolute;inset:auto;border-radius:999px;filter:blur(0.2px);opacity:.6}
+
+    /* Anneau bleuté */
+    .ring-glow{box-shadow:0 0 0 1px rgba(59,130,246,.15),0 0 24px rgba(59,130,246,.25)}
+
+    /* Bouton avec bordure gradient animée */
+    .btn-gradient-border{position:relative}
+    .btn-gradient-border::before{content:'';position:absolute;inset:-2px;z-index:-1;border-radius:14px;background:linear-gradient(90deg,#60a5fa,#2563eb,#60a5fa);background-size:200% 200%;animation:dash 10s linear infinite}
+
+    /* Barre de progression de lecture */
+    .reading-progress{position:fixed;top:0;left:0;height:3px;background:linear-gradient(90deg,#60a5fa,#1d4ed8);transform-origin:left center;transform:scaleX(0);z-index:60}
+
+    /* Compteurs => polices tabulaires */
+    .tabular{font-variant-numeric:tabular-nums}
+
+    /* Accessibilité focus */
+    :focus-visible{outline:3px solid rgba(37,99,235,.6);outline-offset:2px}
+
+    @media (prefers-reduced-motion:reduce){
+      .reveal,.hover-lift,.tilt{transition:none!important}
+      .parallax-bubble{animation:none!important}
+    }
+
+    /******** option competence ************/
+     /* conteneur scrollable */
+.competence-scroll {
+  display: flex;
+  gap: 1rem;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  scrollbar-width: none; /* Firefox */
+}
+.competence-scroll::-webkit-scrollbar { display: none; }
+
+/* carte */
+.competence-card {
+  flex: 0 0 auto;
+  width: 180px;
+  height: 180px;
+  border-radius: 1rem;
+  background-size: cover;
+  background-position: center;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  cursor: pointer;
+}
+
+/* zoom sur sélection */
+.competence-card.active {
+  transform: scale(1.2);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+}
+
+  </style>
+</head>
+
+<body class="bg-white text-slate-800 font-sans dark:bg-slate-950 dark:text-slate-100">
+  <!-- Lien accessibilité -->
+  <a href="#accueil" class="sr-only focus:not-sr-only fixed z-50 left-3 top-3 bg-white text-slate-800 dark:bg-slate-800 dark:text-white px-3 py-2 rounded-lg shadow">Passer au contenu</a>
+
+  <!-- Barre fine bleue + progression lecture -->
+  <div class="h-1 w-full bg-gradient-to-r from-brand-500 via-brand-400 to-brand-600"></div>
+  <div id="progress" class="reading-progress"></div>
+
+  <!-- NAVBAR -->
+  <header class="sticky top-0 z-50 bg-white/80 backdrop-blur border-b border-slate-100 dark:bg-slate-950/70 dark:border-slate-800">
+    <nav class="max-w-7xl mx-auto px-4 md:px-6">
+      <div class="flex items-center justify-between h-16">
+        <!-- Logo / Nom -->
+        <a href="#accueil" class="flex items-center gap-2 group">
+          <span class="inline-flex items-center justify-center w-9 h-9 rounded-xl bg-brand-600 text-white font-bold shadow-soft group-hover:animate-glow">Zoc</span>
+          <span class="font-semibold tracking-wide">ZITA <span class="text-brand-600 dark:text-brand-400">Cheridane</span></span>
+        </a>
+
+        <div class="flex items-center gap-2">
+          <!-- Toggle Thème -->
+          <button id="themeToggle" class="hidden md:inline-flex items-center gap-2 px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-900 text-sm" aria-label="Basculer le thème">
+            <svg id="sun" class="w-4 h-4 hidden" viewBox="0 0 24 24" fill="currentColor"><path d="M12 18a6 6 0 1 0 0-12 6 6 0 0 0 0 12Zm0 4a1 1 0 0 0 1-1v-1a1 1 0 1 0-2 0v1a1 1 0 0 0 1 1Zm0-18a1 1 0 0 0 1-1V2a1 1 0 1 0-2 0v1a1 1 0 0 0 1 1Zm10 7h-1a1 1 0 1 0 0 2h1a1 1 0 1 0 0-2ZM3 12H2a1 1 0 1 0 0 2h1a1 1 0 1 0 0-2Zm15.66 7.66a1 1 0 0 0 1.41-1.41l-.71-.71a1 1 0 0 0-1.41 1.41l.71.71ZM5.05 6.46a1 1 0 1 0 1.41-1.41l-.71-.71A1 1 0 1 0 4.34 5.75l.71.71Zm12.02-1.41a1 1 0 1 0-1.41-1.41l-.71.71A1 1 0 1 0 17.36 5.05l.71-.71ZM6.46 18.95a1 1 0 1 0 1.41-1.41l-.71-.71a1 1 0 1 0-1.41 1.41l.71.71Z"/></svg>
+            <svg id="moon" class="w-4 h-4 hidden" viewBox="0 0 24 24" fill="currentColor"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"/></svg>
+            <span class="hidden md:inline">Thème</span>
+          </button>
+
+          <!-- Bouton mobile -->
+          <button data-collapse-toggle="nav-menu" type="button" class="md:hidden inline-flex items-center p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-900 focus:outline-none" aria-controls="nav-menu" aria-expanded="false">
+            <span class="sr-only">Ouvrir le menu</span>
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5M3.75 17.25h16.5"/></svg>
+          </button>
+        </div>
+
+        <!-- Liens -->
+        <div id="nav-menu" class="hidden md:flex md:items-center md:gap-6 text-sm">
+          <a href="#apropos" class="navlink hover:text-brand-600">À propos</a>
+          <a href="#competences" class="navlink hover:text-brand-600">Compétences</a>
+          <a href="#experiences" class="navlink hover:text-brand-600">Expériences</a>
+          <a href="#projets" class="navlink hover:text-brand-600">Projets</a>
+          <a href="#contact" class="navlink hover:text-brand-600">Contact</a>
+          <a href="#cv" class="px-3 py-1 rounded-full bg-brand-50 text-brand-700 border border-brand-100 hover:bg-brand-100 dark:bg-slate-900 dark:text-brand-300 dark:border-slate-800">Mon CV</a>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <!-- HERO -->
+  <section id="accueil" class="relative overflow-hidden bg-hero">
+    <!-- Bulles parallaxe -->
+    <div class="parallax-bubble w-40 h-40 bg-brand-300/30 top-10 -left-10 animate-float"></div>
+    <div class="parallax-bubble w-24 h-24 bg-brand-400/20 bottom-20 right-10 animate-float" style="animation-delay:.5s"></div>
+
+    <div class="max-w-7xl mx-auto px-4 md:px-6 pt-12 pb-20">
+      <div class="grid md:grid-cols-2 gap-10 items-center">
+        <!-- Texte -->
+        <div class="reveal">
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-50 border border-brand-100 text-brand-700 mb-5 dark:bg-slate-900 dark:border-slate-800 dark:text-brand-300">
+            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M5 3c.3 1.6 1.4 2.7 3 3-.7 1.7-1.8 2.8-3.5 3.5C4.8 11.2 6 12.3 7.6 13c-.7 1.6-1.8 2.7-3.6 3.4 2.1.3 3.6 1.3 4.4 3 1-2.3 2.4-3.7 4.6-4.3-2-1-3.3-2.4-4-4.3 2.1-.7 3.5-2 4.2-4.1C11 7 9.6 6 7.6 5.6 8.2 4 7.3 3 5 3z"/></svg>
+            <span class="text-xs">Disponible — Stage / Junior</span>
+          </div>
+          <h1 class="text-4xl md:text-5xl font-extrabold leading-tight">
+            Salut, je suis <span class="text-brand-600 dark:text-brand-400">ZITA Cheridane</span>
+          </h1>
+          <p class="text-base mt-3 text-slate-500 dark:text-slate-400"><span id="typing" class="font-semibold text-slate-800 dark:text-slate-200"></span></p>
+          <p class="mt-3 text-slate-700 dark:text-slate-300 text-lg">
+            Développeuse Web & passionnée de Robotique. J’aime concevoir des interfaces propres et des solutions fiables — du prototype au déploiement.
+          </p>
+          <div class="mt-6 flex flex-wrap gap-3">
+            <a href="#projets" class="btn-gradient-border px-5 py-2 rounded-xl bg-white/80 dark:bg-slate-900/70 text-slate-900 dark:text-white font-medium shadow-soft hover:bg-white dark:hover:bg-slate-900">Voir mes projets</a>
+            <a href="#contact" class="px-5 py-2 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-900">Me contacter</a>
+          </div>
+
+          <!-- Compteurs -->
+          <div class="mt-10 grid grid-cols-3 gap-4 max-w-md">
+            <div class="p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 text-center hover-lift">
+              <div class="tabular text-2xl font-extrabold text-brand-600 dark:text-brand-400" data-count="12">0</div>
+              <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">Projets</p>
+            </div>
+            <div class="p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 text-center hover-lift">
+              <div class="tabular text-2xl font-extrabold text-brand-600 dark:text-brand-400" data-count="6">0</div>
+              <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">Clients/Partenaires</p>
+            </div>
+            <div class="p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 text-center hover-lift">
+              <div class="tabular text-2xl font-extrabold text-brand-600 dark:text-brand-400" data-count="250">0</div>
+              <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">Heures de code</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Image -->
+        <div class="relative reveal">
+          <div class="rounded-3xl overflow-hidden border border-slate-100 dark:border-slate-800 ring-glow tilt bg-white dark:bg-slate-900">
+            <img src="D:\mes projets\mon portfolio\zoc_bleu.jpg" aria-placeholder="logo" loading="lazy" />
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- A PROPOS -->
+  <section id="apropos" class="py-20">
+    <div class="max-w-7xl mx-auto px-4 md:px-6 grid lg:grid-cols-3 gap-10 items-start">
+      <div class="lg:col-span-2 reveal">
+        <h2 class="text-2xl font-bold text-brand-700 dark:text-brand-400">À propos</h2>
+        <p class="mt-4 text-slate-600 dark:text-slate-300 leading-relaxed">
+          Étudiante en <strong>Génie Logiciel</strong>, je développe des interfaces web accessibles et des backends simples et efficaces. J’ai un intérêt particulier pour l’initiation au <strong>codage</strong> et la <strong>robotique</strong> auprès des jeunes, avec une pédagogie concrète et orientée projets.
+        </p>
+
+        <!-- Ce que j'apporte -->
+        <div class="mt-6 grid sm:grid-cols-2 gap-4">
+          <div class="p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover-lift">
+            <h3 class="font-semibold">Parcours Academique</h3>
+            <ul class="text-sm text-slate-700 dark:text-slate-300 mt-2 space-y-2">
+              <li>• Brevet d'Etude Secondaire, a IUG</li>
+              <li>• Baccalaureat D au college Agape</li>
+              <li>• Probatoire D au college Agape</li>
+            </ul>
+          </div>
+          <div class="p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover-lift">
+            <h3 class="font-semibold">Ce que j’apporte</h3>
+            <ul class="text-sm text-slate-700 dark:text-slate-300 mt-2 space-y-2">
+              <li>• code claire, responsive et documenté</li>
+              <li>• Esprit d’équipe et sens du service</li>
+              <li>• </li>
+              <li>• </li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Onglets Flowbite -->
+        <div class="mt-6">
+           <!-- <ul class="flex flex-wrap text-sm font-medium text-center text-slate-500 dark:text-slate-400 border-b border-slate-200 dark:border-slate-800" id="aboutTab" role="tablist">
+            <li class="me-2" role="presentation">
+              <button class="inline-block p-3 border-b-2 rounded-t-lg" id="tab-profil" data-tabs-target="#profil" type="button" role="tab" aria-controls="profil" aria-selected="true">Profil</button>
+            </li>
+            <li class="me-2" role="presentation">
+              <button class="inline-block p-3 border-b-2 rounded-t-lg" id="tab-contact" data-tabs-target="#contactRapide" type="button" role="tab" aria-controls="contactRapide" aria-selected="false">Contact rapide</button>
+            </li>
+            <li role="presentation">
+              <button class="inline-block p-3 border-b-2 rounded-t-lg" id="tab-faits" data-tabs-target="#faits" type="button" role="tab" aria-controls="faits" aria-selected="false">Faits marquants</button>
+            </li>
+          </ul> -->
+          <div id="aboutTabContent">
+            <div class="hidden p-4 rounded-b-lg bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800" id="profil" role="tabpanel" aria-labelledby="tab-profil">
+              <ul class="grid sm:grid-cols-2 gap-2 text-sm text-slate-700 dark:text-slate-300">
+                <li>Localisation : Douala, Cameroun</li>
+                <li>Disponibilité : Immédiate</li>
+                <li>Ouverte : Stage / Junior</li>
+                <li>Intérêts : Web, Robotique, Pédagogie</li>
+              </ul>
+            </div>
+            <div class="hidden p-4 rounded-b-lg bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800" id="contactRapide" role="tabpanel" aria-labelledby="tab-contact">
+              <div class="grid sm:grid-cols-2 gap-3 text-sm">
+                <a href="mailto:zoccheridane@gmail.com" class="p-3 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-900 flex items-center gap-3">
+                  <svg class="w-5 h-5 text-brand-600 dark:text-brand-400" fill="none" stroke="currentColor" stroke-width="1.7" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21.75 7.5v9a2.25 2.25 0 0 1-2.25 2.25h-15A2.25 2.25 0 0 1 2.25 16.5v-9A2.25 2.25 0 0 1 4.5 5.25h15A2.25 2.25 0 0 1 21.75 7.5z"/><path stroke-linecap="round" stroke-linejoin="round" d="m2.25 8.25 7.593 4.746a3 3 0 0 0 3.114 0L20.55 8.25"/></svg>
+                  <span>zoccheridane@gmail.com</span>
+                </a>
+                <a href="https://wa.me/237682303137" target="_blank" class="p-3 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-900 flex items-center gap-3">
+                  <svg class="w-5 h-5 text-emerald-500" viewBox="0 0 24 24" fill="currentColor"><path d="M20 3.5A10 10 0 0 0 3.4 16.8L2 22l5.3-1.4A10 10 0 1 0 20 3.5ZM6.7 19.5l-.3.1h-.1l.1-.1l-.1.1l.8-3l-.2-.3A8.2 8.2 0 1 1 12 20.2a8.1 8.1 0 0 1-4.7-1.4l-.6.7Zm11-6.2c-.1-.3-.5-.4-1.1-.7s-1.2-.4-1.3.1c-.2.4-.5.7-.8 1c-.2.1-.4.2-.7 0c-.2-.1-.9-.3-1.7-1c-.6-.5-1-1.1-1.2-1.3c-.2-.4 0-.6.1-.7c.2-.2.3-.4.4-.6c.1-.2 0-.5 0-.6s-.7-1.7-1-2.3c-.2-.6-.5-.5-.7-.5h-.6c-.3 0-.6.2-.8.4c-.3.3-1.1 1-1.1 2.4s1.1 2.9 1.3 3.1c.2.3 2.2 3.4 5.3 4.6c.7.3 1.3.4 1.8.6c.8.2 1.5.2 2.1.1c.7-.1 2.2-.9 2.5-1.7c.3-.8.3-1.4.2-1.5Z"/></svg>
+                  <span>WhatsApp</span>
+                </a>
+              </div>
+            </div>
+            <div class="hidden p-4 rounded-b-lg bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800" id="faits" role="tabpanel" aria-labelledby="tab-faits">
+              <ul class="grid sm:grid-cols-2 gap-2 text-sm text-slate-700 dark:text-slate-300">
+                <li>Encadrement d’enfants (6–18 ans)</li>
+                <li>Montage d’un bras robotique</li>
+                <li>App gestion stocks & ventes</li>
+                <li>Flyers et logo (design)</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div> 
+
+      <!-- Image / Carte contact -->
+      <div class="lg:col-span-1 reveal">
+        <div class="rounded-3xl overflow-hidden border border-slate-100 dark:border-slate-800 ring-glow">
+          <img src="D:\mes projets\mon portfolio\IMG-cv.jpg" alt="Portrait créatif" class="w-full h-80 object-cover" loading="lazy" />
+        </div>
+        <ul class="mt-6 space-y-2 text-sm text-slate-700 dark:text-slate-300">
+          <li><span class="text-slate-500 dark:text-slate-400">Mobile :</span> +237 6 97 24 63 59</li>
+          <li><span class="text-slate-500 dark:text-slate-400">Localisation :</span> Douala, Cameroun</li>
+          <li><span class="text-slate-500 dark:text-slate-400">Disponibilité :</span> Immédiate</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- COMPETENCES -->
+  <section id="competences" class="py-20 bg-brand-50/30 dark:bg-slate-900/30">
+    <div class="max-w-7xl mx-auto px-4 md:px-6">
+      <h2 class="text-2xl font-bold text-brand-700 dark:text-brand-400 reveal">Compétences</h2>
+
+       <!-- Conteneur scrollable horizontal -->
+    <div class="competence-scroll flex space-x-6 overflow-x-auto pb-6">
+      
+      <!-- Carte compétence HTML -->
+      <div class="competence-card bg-cover bg-center flex-shrink-0 w-64 h-80 rounded-2xl border border-slate-300 dark:border-slate-700"
+           style="background-image: url('https://cdn.jsdelivr.net/gh/devicons/devicon/icons/html5/html5-original.svg');">
+        <div class="bg-black/70 dark:bg-slate-900/70 w-full  rounded-2xl flex flex-col justify-end p-4 mt-60">
+          <h3 class="text-white font-semibold text-lg">HTML5</h3>
+          <p class="text-slate-200 text-sm">Structures sémantiques et accessibilité.</p>
+        </div>
+      </div>
+
+      <!-- Carte compétence CSS -->
+      <div class="competence-card bg-cover bg-center flex-shrink-0 w-64 h-80 rounded-2xl border border-slate-300 dark:border-slate-700"
+           style="background-image: url('https://cdn.jsdelivr.net/gh/devicons/devicon/icons/css3/css3-original.svg');">
+        <div class="bg-black/70 dark:bg-slate-900/70 w-full rounded-2xl flex flex-col justify-end p-4 mt-60">
+          <h3 class="text-white font-semibold text-lg">CSS3</h3>
+          <p class="text-slate-200 text-sm">Responsive design, animations, TailwindCSS.</p>
+        </div>
+      </div>
+
+      <!-- Carte compétence JS -->
+      <div class="competence-card bg-cover bg-center flex-shrink-0 w-64 h-80 rounded-2xl border border-slate-300 dark:border-slate-700"
+           style="background-image: url('https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg');">
+        <div class="bg-black/70 dark:bg-slate-900/70 w-full rounded-2xl flex flex-col justify-end p-4 mt-60">
+          <h3 class="text-white font-semibold text-lg">JavaScript</h3>
+          <p class="text-slate-200 text-sm">Dynamisme moderne et Originale.</p>
+        </div>
+      </div>
+
+      <!-- Carte compétence PHP -->
+      <div class="competence-card bg-cover bg-center flex-shrink-0 w-64 h-80 rounded-2xl border border-slate-300 dark:border-slate-700"
+           style="background-image: url('https://cdn.jsdelivr.net/gh/devicons/devicon/icons/php/php-original.svg');">
+        <div class="bg-black/70 dark:bg-slate-900/70 w-full rounded-2xl flex flex-col justify-end p-4 mt-60">
+          <h3 class="text-white font-semibold text-lg">PHP</h3>
+          <p class="text-slate-200 text-sm">Développement back-end avec Laravel.</p>
+        </div>
+      </div>
+
+      <!-- Carte compétence MySQL -->
+      <div class="competence-card bg-cover bg-center flex-shrink-0 w-64 h-80 rounded-2xl border border-slate-300 dark:border-slate-700"
+           style="background-image: url('https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mysql/mysql-original.svg');">
+        <div class="bg-black/70 dark:bg-slate-900/70 w-full rounded-2xl flex flex-col justify-end p-4 mt-60">
+          <h3 class="text-white font-semibold text-lg">MySQL</h3>
+          <p class="text-slate-200 text-sm">Modélisation (UML) et optimisation de requêtes.</p>
+        </div>
+      </div>
+
+      <!-- Carte compétence Robotique -->
+      <div class="competence-card bg-cover bg-center flex-shrink-0 w-64 h-80 rounded-2xl border border-slate-300 dark:border-slate-700"
+           style="background-image:url('https://www.robot-magazine.fr/wp-content/uploads/2023/05/Laumond_La_Robotique_entre_science_technologie_et_imaginaire-1-2-780x470.jpg');">
+        <div class="bg-black/70 dark:bg-slate-900/70 w-full rounded-2xl flex flex-col justify-end p-4 mt-60">
+          <h3 class="text-white font-semibold text-lg">Robotique</h3>
+          <p class="text-slate-200 text-sm">Notion de bases sur le domaine avec de l'experiences dans l'assemblage.</p>
+        </div>
+      </div>
+
+    </div>
+    </div>
+  </section>
+
+  <!-- EXPERIENCES -->
+  <section id="experiences" class="py-20">
+    <div class="max-w-7xl mx-auto px-4 md:px-6">
+      <h2 class="text-2xl font-bold text-brand-700 dark:text-brand-400 reveal">Expériences</h2>
+
+      <ol class="relative border-s border-slate-200 dark:border-slate-800 mt-8 space-y-10">
+        <!-- Stage académique -->
+        <li class="ms-6 reveal">
+          <span class="absolute -start-3 flex h-6 w-6 items-center justify-center rounded-full bg-brand-600 text-white ring-2 ring-white dark:ring-slate-900">1</span>
+          <h3 class="font-semibold">Stage académique – ADH ENGENEERING SARL <span class="text-slate-500 dark:text-slate-400 font-normal">(2024 – 2025)</span></h3>
+          <ul class="text-sm text-slate-700 dark:text-slate-300 list-disc pl-5 mt-2">
+            <li>Gestion du suivi des ventes</li>
+            <li>Gestion du réapprovisionnement</li>
+          </ul>
+          <div class="mt-3 flex flex-wrap gap-2 text-xs">
+            <span class="px-2 py-1 rounded bg-brand-50 dark:bg-slate-900 border border-brand-100 dark:border-slate-800 text-brand-700 dark:text-brand-300">PHP</span>
+            <span class="px-2 py-1 rounded bg-brand-50 dark:bg-slate-900 border border-brand-100 dark:border-slate-800 text-brand-700 dark:text-brand-300">MySQL</span>
+          </div>
+        </li>
+
+        <!-- Bénévolat -->
+        <li class="ms-6 reveal">
+          <span class="absolute -start-3 flex h-6 w-6 items-center justify-center rounded-full bg-brand-600 text-white ring-2 ring-white dark:ring-slate-900">2</span>
+          <h3 class="font-semibold">Bénévolat – Smart Kids Holiday <span class="text-slate-500 dark:text-slate-400 font-normal">(2025 – 2026)</span></h3>
+          <ul class="text-sm text-slate-700 dark:text-slate-300 list-disc pl-5 mt-2">
+            <li>Encadrement d’enfants de 6 à 18 ans</li>
+            <li>Formatrice en robotique & codage</li>
+          </ul>
+          <div class="mt-3 flex flex-wrap gap-2 text-xs">
+            <span class="px-2 py-1 rounded bg-brand-50 dark:bg-slate-900 border border-brand-100 dark:border-slate-800 text-brand-700 dark:text-brand-300">Arduino</span>
+            <span class="px-2 py-1 rounded bg-brand-50 dark:bg-slate-900 border border-brand-100 dark:border-slate-800 text-brand-700 dark:text-brand-300">Pédagogie</span>
+          </div>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- PROJETS -->
+  <section id="projets" class="py-20 bg-brand-50/40 dark:bg-slate-900/30">
+    <div class="max-w-7xl mx-auto px-4 md:px-6">
+      <div class="flex items-end justify-between gap-4">
+        <div>
+          <h2 class="text-2xl font-bold text-brand-700 dark:text-brand-400 reveal">Projets</h2>
+          <p class="text-slate-600 dark:text-slate-300 mt-2 reveal">Sélection de travaux académiques, bénévolat & personnels.</p>
+        </div>
+        <!-- Filtres -->
+        <div class="flex flex-wrap gap-2 text-xs">
+          <button class="filter-btn px-3 py-1 rounded-full border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 hover:bg-slate-50 dark:hover:bg-slate-800" data-filter="all">Tous</button>
+          <button class="filter-btn px-3 py-1 rounded-full border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 hover:bg-slate-50 dark:hover:bg-slate-800" data-filter="web">Web</button>
+          <button class="filter-btn px-3 py-1 rounded-full border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 hover:bg-slate-50 dark:hover:bg-slate-800" data-filter="design">Design</button>
+          <button class="filter-btn px-3 py-1 rounded-full border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 hover:bg-slate-50 dark:hover:bg-slate-800" data-filter="robotique">Robotique</button>
+        </div>
+      </div>
+
+      <!-- Grille de cartes -->
+      <div class="mt-8 grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <!-- App gestion stock (WEB) -->
+        <article class="project-card tilt hover-lift bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-3xl overflow-hidden shadow-card reveal" data-cat="web">
+          <div class="relative">
+            <img class="w-full h-44 object-cover" src="programmation/gestion.png" alt="Gestion de stock" loading="lazy" />
+            <span class="absolute top-3 left-3 text-[11px] px-2 py-1 rounded-full bg-white/90 dark:bg-slate-900/80 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300">PHP • MySQL</span>
+          </div>
+          <div class="p-5">
+            <h3 class="font-semibold">Application de gestion de stock & suivi des ventes</h3>
+            <p class="text-sm text-slate-600 dark:text-slate-300 mt-2">CRUD, alertes réappro, tableaux & export simple.</p>
+            <div class="mt-4 flex gap-2 flex-wrap text-xs">
+              <span class="px-2 py-1 rounded bg-brand-50 dark:bg-slate-900 border border-brand-100 dark:border-slate-800 text-brand-700 dark:text-brand-300">Auth</span>
+              <span class="px-2 py-1 rounded bg-brand-50 dark:bg-slate-900 border border-brand-100 dark:border-slate-800 text-brand-700 dark:text-brand-300">Responsive</span>
+              <button data-modal-target="proj1" data-modal-toggle="proj1" class="px-2 py-1 rounded border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800">Détails</button>
+            </div>
+          </div>
+        </article>
+
+        <!-- Logo édition (DESIGN) -->
+        <article class="project-card tilt hover-lift bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-3xl overflow-hidden shadow-card reveal" data-cat="design">
+          <div class="relative">
+            <img class="w-full h-44 object-cover" src="logos/logo2.png" alt="Logo" loading="lazy" />
+            <span class="absolute top-3 left-3 text-[11px] px-2 py-1 rounded-full bg-white/90 dark:bg-slate-900/80 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300">Branding</span>
+          </div>
+          <div class="p-5">
+            <h3 class="font-semibold">Logos</h3>
+            <p class="text-sm text-slate-600 dark:text-slate-300 mt-2">Concept épuré, déclinaisons web & print(avec illustrator).</p>
+            <div class="mt-4 flex gap-2 flex-wrap text-xs">
+              <button data-modal-target="proj2" data-modal-toggle="proj2" class="px-2 py-1 rounded border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800">Détails</button>
+            </div>
+          </div>
+        </article>
+
+        <!-- Flyers resto (DESIGN) -->
+        <article class="project-card tilt hover-lift bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-3xl overflow-hidden shadow-card reveal" data-cat="design">
+          <div class="relative">
+            <img class="w-full h-44 object-cover" src="flyers/flyer2.png" alt="Flyers restaurant" loading="lazy" />
+            <span class="absolute top-3 left-3 text-[11px] px-2 py-1 rounded-full bg-white/90 dark:bg-slate-900/80 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300">Print</span>
+          </div>
+          <div class="p-5">
+            <h3 class="font-semibold">Flyers</h3>
+            <p class="text-sm text-slate-600 dark:text-slate-300 mt-2">Mise en page professionnel, plubicité garantie & hiérarchie claire(avec illustrator).</p>
+            <div class="mt-4 flex gap-2 flex-wrap text-xs">
+              <button data-modal-target="proj3" data-modal-toggle="proj3" class="px-2 py-1 rounded border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800">Détails</button>
+            </div>
+          </div>
+        </article>
+
+        <!-- Bras robotique (ROBOTIQUE) -->
+        <article class="project-card tilt hover-lift bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-3xl overflow-hidden shadow-card reveal" data-cat="robotique">
+          <div class="relative">
+            <img class="w-full h-44 object-cover" src="robot/brasroto.jpg" alt="Bras robotique" loading="lazy" />
+            <span class="absolute top-3 left-3 text-[11px] px-2 py-1 rounded-full bg-white/90 dark:bg-slate-900/80 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300">Maquette</span>
+          </div>
+          <div class="p-5">
+            <h3 class="font-semibold">Montage d’un bras robotique</h3>
+            <p class="text-sm text-slate-600 dark:text-slate-300 mt-2">Assemblage, servomoteurs(...), premières séquences.</p>
+            <div class="mt-4 flex gap-2 flex-wrap text-xs">
+              <button data-modal-target="proj4" data-modal-toggle="proj4" class="px-2 py-1 rounded border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800">Détails</button>
+            </div>
+          </div>
+        </article>
+
+        <!-- Détecteur d’obstacle (ROBOTIQUE) -->
+        <article class="project-card tilt hover-lift bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-3xl overflow-hidden shadow-card reveal" data-cat="robotique">
+          <div class="relative">
+            <img class="w-full h-44 object-cover" src="robot/voiturerobot.jpeg" alt="Détecteur d'obstacle" loading="lazy" />
+            <span class="absolute top-3 left-3 text-[11px] px-2 py-1 rounded-full bg-white/90 dark:bg-slate-900/80 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300">Maquette</span>
+          </div>
+          <div class="p-5">
+            <h3 class="font-semibold">Détecteur d’obstacles</h3>
+            <p class="text-sm text-slate-600 dark:text-slate-300 mt-2">Capteur HC-SR04, signalisation LED/buzzer.</p>
+            <div class="mt-4 flex gap-2 flex-wrap text-xs">
+              <button data-modal-target="proj5" data-modal-toggle="proj5" class="px-2 py-1 rounded border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800">Détails</button>
+            </div>
+          </div>
+        </article>
+
+        <!-- gestion des inscriptions -->
+         <article class="project-card tilt hover-lift bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-3xl overflow-hidden shadow-card reveal" data-cat="web">
+          <div class="relative">
+            <img class="w-full h-44 object-cover" src="programmation/Capture d'écran 2025-08-21 175649.png" alt="Gestion des inscriptions scolaires" loading="lazy" />
+            <span class="absolute top-3 left-3 text-[11px] px-2 py-1 rounded-full bg-white/90 dark:bg-slate-900/80 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300">back-end C</span>
+          </div>
+          <div class="p-5">
+          <h3 class="font-semibold">Gestion des inscriptions scolaires</h3>
+            <p class="text-sm text-slate-600 dark:text-slate-300 mt-2">Enregister, lister, statuer.</p>
+            <div class="mt-4 flex gap-2 flex-wrap text-xs">
+              <button data-modal-target="proj6" data-modal-toggle="proj6" class="px-2 py-1 rounded border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800">Détails</button>
+            </div>
+          </div>
+        </article>
+      </div>
+    </div>
+
+    <!-- Modals projets (Flowbite) -->
+    <div id="proj1" tabindex="-1" aria-hidden="true" class="hidden fixed inset-0 z-50 p-4 overflow-y-auto">
+      <div class="relative w-full max-w-2xl mx-auto">
+        <div class="relative bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-card">
+          <div class="flex items-center justify-between p-4 border-b border-slate-200 dark:border-slate-800">
+            <h3 class="font-semibold">Gestion de stock & ventes</h3>
+            <button type="button" class="text-slate-500 hover:text-slate-800 dark:hover:text-white" data-modal-hide="proj1">
+              <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12"/></svg>
+            </button>
+          </div>
+          <!-- container -->
+          <div class="competence-scroll flex space-x-6 overflow-x-auto pb-6">
+            <!-- 1 -->
+            <div class=" rounded-3xl overflow-hidden border border-slate-100 dark:border-slate-800 ring-glow">
+              <img src="logos/logo2.png" alt="Portrait créatif" class="w-full h-80 object-cover" loading="lazy" />
+            </div>
+            <!-- 2 -->
+            <div class=" rounded-3xl overflow-hidden border border-slate-100 dark:border-slate-800 ring-glow">
+              <img src="logos/Capture d'écran 2025-08-21 144107.png" alt="Portrait créatif" class="w-full h-80 object-cover" loading="lazy" />
+            </div>
+            <!-- 3 -->
+              <div class=" rounded-3xl overflow-hidden border border-slate-100 dark:border-slate-800 ring-glow">
+              <img src="logos/logo3.png" alt="Portrait créatif" class="w-full h-80 object-cover" loading="lazy" />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="proj2" tabindex="-1" aria-hidden="true" class="hidden fixed inset-0 z-50 p-4 overflow-y-auto">
+      <div class="relative w-full max-w-2xl mx-auto">
+        <div class="relative bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-card">
+          <div class="flex items-center justify-between p-4 border-b border-slate-200 dark:border-slate-800">
+            <h3 class="font-semibold">Logos</h3>
+            <button type="button" class="text-slate-500 hover:text-slate-800 dark:hover:text-white" data-modal-hide="proj2">
+              <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12"/></svg>
+            </button>
+          </div>
+          <!-- container -->
+          <div class="competence-scroll flex space-x-6 overflow-x-auto pb-6">
+            <!-- logo1 -->
+            <div class=" rounded-3xl overflow-hidden border border-slate-100 dark:border-slate-800 ring-glow">
+              <img src="logos/Capture d'écran 2025-08-21 144107.png" alt="Portrait créatif" class="w-full h-80 object-cover" loading="lazy" />
+            </div>
+            <!-- logo2 -->
+              <div class=" rounded-3xl overflow-hidden border border-slate-100 dark:border-slate-800 ring-glow">
+              <img src="logos/logo3.png" alt="" class="w-full h-80 object-cover" loading="lazy" />
+            </div>
+            <!-- logo3 -->
+            <div class=" rounded-3xl overflow-hidden border border-slate-100 dark:border-slate-800 ring-glow">
+              <img src="logos/logo2.png" alt="" class="w-full h-80 object-cover" loading="lazy" />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="proj3" tabindex="-1" aria-hidden="true" class="hidden fixed inset-0 z-50 p-4 overflow-y-auto">
+      <div class="relative w-full max-w-2xl mx-auto">
+        <div class="relative bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-card">
+          <div class="flex items-center justify-between p-4 border-b border-slate-200 dark:border-slate-800">
+            <h3 class="font-semibold">Flyers</h3>
+            <button type="button" class="text-slate-500 hover:text-slate-800 dark:hover:text-white" data-modal-hide="proj3">
+              <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12"/></svg>
+            </button>
+          </div>
+          <!-- container -->
+          <div class="competence-scroll flex space-x-6 overflow-x-auto pb-6">
+            <!-- flyer1 -->
+            <div class=" rounded-3xl overflow-hidden border border-slate-100 dark:border-slate-800 ring-glow">
+              <img src="flyers/flyer1.png" alt="Portrait créatif" class="w-full h-80 object-cover" loading="lazy" />
+            </div>
+            <!-- flyer2 -->
+            <div class=" rounded-3xl overflow-hidden border border-slate-100 dark:border-slate-800 ring-glow">
+              <img src="flyers/flyer2.png" alt="Portrait créatif" class="w-full h-80 object-cover" loading="lazy" />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="proj4" tabindex="-1" aria-hidden="true" class="hidden fixed inset-0 z-50 p-4 overflow-y-auto">
+      <div class="relative w-full max-w-2xl mx-auto">
+        <div class="relative bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-card">
+          <div class="flex items-center justify-between p-4 border-b border-slate-200 dark:border-slate-800">
+            <h3 class="font-semibold">Montage d’un bras robotique</h3>
+            <button type="button" class="text-slate-500 hover:text-slate-800 dark:hover:text-white" data-modal-hide="proj4">
+              <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12"/></svg>
+            </button>
+          </div>
+          <!-- container -->
+          <div class="competence-scroll flex space-x-6 overflow-x-auto pb-6">
+            <!-- 1 -->
+            <div class=" rounded-3xl overflow-hidden border border-slate-100 dark:border-slate-800 ring-glow">
+              <img src="robot/3.jpeg" alt="Portrait créatif" class="w-full h-80 object-cover" loading="lazy" />
+            </div>
+            <!-- 2 -->
+            <div class=" rounded-3xl overflow-hidden border border-slate-100 dark:border-slate-800 ring-glow">
+              <img src="robot/4.jpeg" alt="" class="w-full h-80 object-cover" loading="lazy" />
+            </div>
+            <!-- 3 -->
+            <div class=" rounded-3xl overflow-hidden border border-slate-100 dark:border-slate-800 ring-glow">
+              <img src="robot/5.jpeg" alt="" class="w-full h-80 object-cover" loading="lazy" />
+            </div>
+            <!-- 4 -->
+            <div class=" rounded-3xl overflow-hidden border border-slate-100 dark:border-slate-800 ring-glow">
+              <img src="robot/6.jpeg" alt="" class="w-full h-80 object-cover" loading="lazy" />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="proj5" tabindex="-1" aria-hidden="true" class="hidden fixed inset-0 z-50 p-4 overflow-y-auto">
+      <div class="relative w-full max-w-2xl mx-auto">
+        <div class="relative bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-card">
+          <div class="flex items-center justify-between p-4 border-b border-slate-200 dark:border-slate-800">
+            <h3 class="font-semibold">Détecteur d’obstacles</h3>
+            <button type="button" class="text-slate-500 hover:text-slate-800 dark:hover:text-white" data-modal-hide="proj5">
+              <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12"/></svg>
+            </button>
+          </div>
+          <!-- container -->
+          <div class="competence-scroll flex space-x-6 overflow-x-auto pb-6">
+            <!-- 1 -->
+            <div class=" rounded-3xl overflow-hidden border border-slate-100 dark:border-slate-800 ring-glow">
+              <img src="robot/1.jpeg" alt="Portrait créatif" class="w-full h-80 object-cover" loading="lazy" />
+            </div>
+            <!-- 2 -->
+              <div class=" rounded-3xl overflow-hidden border border-slate-100 dark:border-slate-800 ring-glow">
+              <img src="robot/14.jpeg" alt="" class="w-full h-80 object-cover" loading="lazy" />
+            </div>
+            <!-- 3 -->
+            <div class=" rounded-3xl overflow-hidden border border-slate-100 dark:border-slate-800 ring-glow">
+              <img src="robot/2.jpeg" alt="" class="w-full h-80 object-cover" loading="lazy" />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="proj6" tabindex="-1" aria-hidden="true" class="hidden fixed inset-0 z-50 p-4 overflow-y-auto">
+      <div class="relative w-full max-w-2xl mx-auto">
+        <div class="relative bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-card">
+          <div class="flex items-center justify-between p-4 border-b border-slate-200 dark:border-slate-800">
+            <h3 class="font-semibold">Gestion des inscriptions scolaires</h3>
+            <button type="button" class="text-slate-500 hover:text-slate-800 dark:hover:text-white" data-modal-hide="proj6">
+              <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12"/></svg>
+            </button>
+          </div>
+          <!-- container -->
+          <div class="competence-scroll flex space-x-6 overflow-x-auto pb-6">
+            <!-- 1 -->
+            <div class=" rounded-3xl overflow-hidden border border-slate-100 dark:border-slate-800 ring-glow">
+              <img src="programmation/Capture d'écran 2025-08-21 175454.png" alt="Portrait créatif" class="w-full h-80 object-cover" loading="lazy" />
+            </div>
+            <!-- 2 -->
+            <!-- <div class=" rounded-3xl overflow-hidden border border-slate-100 dark:border-slate-800 ring-glow">
+              <img src="logos/Capture d'écran 2025-08-21 144107.png" alt="Portrait créatif" class="w-full h-80 object-cover" loading="lazy" />
+            </div> -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA CV -->
+  <section id="cv" class="py-20">
+    <div class="max-w-7xl mx-auto px-4 md:px-6 text-center reveal">
+      <div class="mx-auto max-w-3xl p-8 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-card">
+        <h2 class="text-2xl font-bold text-brand-700 dark:text-brand-400">Télécharger mon CV</h2>
+        <p class="text-slate-600 dark:text-slate-300 mt-2">Version PDF — thème clair blanc/bleu.</p>
+        <div class="mt-6 flex flex-wrap justify-center gap-3">
+          <a href="cv/cv2.2.pdf" class="px-5 py-2 rounded-xl bg-brand-600 text-white font-medium shadow-soft hover:bg-brand-700">Télécharger</a>
+          <button data-modal-target="cvModal" data-modal-toggle="cvModal" class="px-5 py-2 rounded-xl border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800">Aperçu</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal CV -->
+    <div id="cvModal" tabindex="-1" aria-hidden="true" class="hidden fixed inset-0 z-50 p-4 overflow-y-auto">
+      <div class="relative w-full max-w-3xl mx-auto">
+        <div class="relative bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-card">
+          <div class="flex items-center justify-between p-4 border-b border-slate-200 dark:border-slate-800">
+            <h3 class="font-semibold">Aperçu rapide du CV</h3>
+            <button title="fermer" type="button" class="text-slate-500 hover:text-slate-800 dark:hover:text-white" data-modal-hide="cvModal">
+              <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12"/></svg>
+            </button>
+          </div>
+          <div class="p-4">
+            <iframe src="cv/cv2.2.pdf" class="w-full h-[90vh] rounded-lg" title="CV PDF"></iframe>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section id="contact" class="py-20 bg-brand-50/30 dark:bg-slate-900/30">
+    <div class="max-w-7xl mx-auto px-4 md:px-6">
+      <h2 class="text-2xl font-bold text-brand-700 dark:text-brand-400 reveal">Contact</h2>
+      <p class="text-slate-600 dark:text-slate-300 mt-2 reveal">Une idée, un besoin, un stage ? Écrivons-nous.</p>
+
+      <div class="mt-8 grid md:grid-cols-2 gap-8 items-start">
+        <!-- Formulaire Netlify -->
+        <form class="space-y-4 reveal" name="contact" method="POST" data-netlify="true">
+          <input type="hidden" name="form-name" value="contact" />
+          <div>
+            <label class="block text-sm mb-1 text-slate-700 dark:text-slate-300">Nom</label>
+            <input name="nom" required class="w-full px-4 py-3 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 focus:outline-none focus:ring-2 focus:ring-brand-500" placeholder="Votre nom" />
+          </div>
+          <div>
+            <label class="block text-sm mb-1 text-slate-700 dark:text-slate-300">Email</label>
+            <input type="email" name="email" required class="w-full px-4 py-3 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 focus:outline-none focus:ring-2 focus:ring-brand-500" placeholder="vous@email.com" />
+          </div>
+          <div>
+            <label class="block text-sm mb-1 text-slate-700 dark:text-slate-300">Message</label>
+            <textarea name="message" rows="4" required class="w-full px-4 py-3 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 focus:outline-none focus:ring-2 focus:ring-brand-500" placeholder="Dites-moi tout…"></textarea>
+          </div>
+          <div class="flex items-center gap-3">
+            <button class="px-5 py-2 rounded-xl bg-brand-600 text-white font-semibold hover:bg-brand-700">Envoyer</button>
+            <a href="mailto:zoccheridane@gmail.com" class="px-5 py-2 rounded-xl border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800">Écrire un e-mail</a>
+          </div>
+        </form>
+
+        <!-- Image + liens -->
+        <div class="reveal">
+          <div class="rounded-3xl overflow-hidden border border-slate-200 dark:border-slate-800 ring-glow">
+            <img src="zoc_noir.jpg" alt="Collaboration" class="w-full h-72 object-cover" loading="lazy" />
+          </div>
+          <div class="mt-6 grid grid-cols-2 gap-4 text-sm">
+            <a href="tel:+237697246359" class="p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 flex items-center gap-3">
+              <svg class="w-5 h-5 text-emerald-500" fill="none" stroke="currentColor" stroke-width="1.7" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h1.5a2.25 2.25 0 0 0 2.25-2.25v-1.007a1.125 1.125 0 0 0-.852-1.09l-3.534-.884a1.125 1.125 0 0 0-1.173.417l-.97 1.293a1.125 1.125 0 0 1-1.21.41 12.035 12.035 0 0 1-7.143-7.143 1.125 1.125 0 0 1 .41-1.21l1.293-.97a1.125 1.125 0 0 0 .417-1.173l-.884-3.534A1.125 1.125 0 0 0 7.507 2.25H6.75A4.5 4.5 0 0 0 2.25 6.75Z"/></svg>
+              <span>+237 6 97 24 63 59</span>
+            </a>
+            <a href="https://wa.me/237682303137" target="_blank" class="p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 flex items-center gap-3">
+              <svg class="w-5 h-5 text-emerald-500" viewBox="0 0 24 24" fill="currentColor"><path d="M20 3.5A10 10 0 0 0 3.4 16.8L2 22l5.3-1.4A10 10 0 1 0 20 3.5ZM6.7 19.5l-.3.1h-.1l.1-.1l-.1.1l.8-3l-.2-.3A8.2 8.2 0 1 1 12 20.2a8.1 8.1 0 0 1-4.7-1.4l-.6.7Zm11-6.2c-.1-.3-.5-.4-1.1-.7s-1.2-.4-1.3.1c-.2.4-.5.7-.8 1c-.2.1-.4.2-.7 0c-.2-.1-.9-.3-1.7-1c-.6-.5-1-1.1-1.2-1.3c-.2-.4 0-.6.1-.7c.2-.2.3-.4.4-.6c.1-.2 0-.5 0-.6s-.7-1.7-1-2.3c-.2-.6-.5-.5-.7-.5h-.6c-.3 0-.6.2-.8.4c-.3.3-1.1 1-1.1 2.4s1.1 2.9 1.3 3.1c.2.3 2.2 3.4 5.3 4.6c.7.3 1.3.4 1.8.6c.8.2 1.5.2 2.1.1c.7-.1 2.2-.9 2.5-1.7c.3-.8.3-1.4.2-1.5Z"/></svg>
+              <span>WhatsApp</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="py-10 border-t border-slate-200 dark:border-slate-800">
+    <div class="max-w-7xl mx-auto px-4 md:px-6 text-center text-sm text-slate-500 dark:text-slate-400">
+      <p>© <span id="year"></span> ZITA Cheridane — Tous droits réservés</p>
+      <div class="mt-3 flex justify-center gap-3">
+        <a href="#accueil" class="px-3 py-1 rounded-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800">Haut de page</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- JS: Flowbite + animations + interactions -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.js"></script>
+  <script>
+    /* ==================== Préférences & Thème ==================== */
+    const root = document.documentElement;
+    const themeBtn = document.getElementById('themeToggle');
+    const sun = document.getElementById('sun');
+    const moon = document.getElementById('moon');
+    const savedTheme = localStorage.getItem('theme');
+    const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const setThemeUI = () => {
+      const isDark = root.classList.contains('dark');
+      if(isDark){ moon.classList.add('hidden'); sun.classList.remove('hidden'); }
+      else{ sun.classList.add('hidden'); moon.classList.remove('hidden'); }
+    }
+    if(savedTheme){ root.classList.toggle('dark', savedTheme === 'dark'); }
+    else{ root.classList.toggle('dark', systemDark); }
+    setThemeUI();
+    themeBtn?.addEventListener('click', ()=>{
+      root.classList.toggle('dark');
+      localStorage.setItem('theme', root.classList.contains('dark') ? 'dark' : 'light');
+      setThemeUI();
+    });
+
+    /* ==================== Reveal On Scroll ==================== */
+    const revealEls = document.querySelectorAll('.reveal');
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if(entry.isIntersecting){ entry.target.classList.add('show'); io.unobserve(entry.target); }
+      });
+    }, { threshold: .18 });
+    revealEls.forEach(el => io.observe(el));
+
+    /* ==================== Compteurs animés ==================== */
+    const counters = document.querySelectorAll('[data-count]');
+    const co = new IntersectionObserver((entries)=>{
+      entries.forEach(e=>{
+        if(!e.isIntersecting) return;
+        const el = e.target; const end = parseInt(el.dataset.count,10);
+        let t=0; const step = Math.max(1, Math.round(end/60));
+        const tick = () => { t += step; if(t >= end){ el.textContent = end; return; } el.textContent = t; requestAnimationFrame(tick); };
+        requestAnimationFrame(tick); co.unobserve(el);
+      })
+    },{threshold:.6});
+    counters.forEach(c=>co.observe(c));
+
+    /* ==================== Filtre Projets ==================== */
+    const filterBtns = document.querySelectorAll('.filter-btn');
+    const cards = document.querySelectorAll('.project-card');
+    filterBtns.forEach(btn=>{
+      btn.addEventListener('click', ()=>{
+        const cat = btn.dataset.filter;
+        filterBtns.forEach(b=>b.classList.remove('bg-brand-600','text-white'));
+        btn.classList.add('bg-brand-600','text-white');
+        cards.forEach(card=>{
+          const c = card.getAttribute('data-cat');
+          card.style.display = (cat === 'all' || c === cat) ? 'block' : 'none';
+        });
+      });
+    });
+    document.querySelector('.filter-btn[data-filter="all"]')?.classList.add('bg-brand-600','text-white');
+
+    /* ==================== Tilt 3D léger ==================== */
+    const tiltEls = document.querySelectorAll('.tilt');
+    tiltEls.forEach(el=>{
+      const damp = 18; const reset = () => el.style.transform = 'rotateX(0) rotateY(0)';
+      el.addEventListener('mousemove', (e)=>{
+        const rect = el.getBoundingClientRect();
+        const cx = rect.left + rect.width/2; const cy = rect.top + rect.height/2;
+        const dx = (e.clientX - cx) / rect.width; const dy = (e.clientY - cy) / rect.height;
+        el.style.transform = `perspective(900px) rotateX(${-dy*damp}deg) rotateY(${dx*damp}deg)`;
+      });
+      el.addEventListener('mouseleave', reset);
+    });
+
+    /* ==================== Année ==================== */
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    /* ==================== Barre de progression de lecture ==================== */
+    const progress = document.getElementById('progress');
+    const setProgress = () => {
+      const h = document.documentElement; const scrolled = (h.scrollTop)/(h.scrollHeight - h.clientHeight);
+      progress.style.transform = `scaleX(${Math.max(0, Math.min(1, scrolled))})`;
+    };
+    document.addEventListener('scroll', setProgress, { passive: true });
+    setProgress();
+
+    /* ==================== Lien actif nav selon section ==================== */
+    const sections = ['apropos','competences','experiences','projets','contact'];
+    const navlinks = Array.from(document.querySelectorAll('.navlink'));
+    const secObserver = new IntersectionObserver((entries)=>{
+      entries.forEach(entry=>{
+        const id = entry.target.id;
+        const link = navlinks.find(a => a.getAttribute('href') === `#${id}`);
+        if(link) link.classList.toggle('text-brand-600', entry.isIntersecting);
+      })
+    },{ rootMargin: '-40% 0px -55% 0px', threshold: 0 });
+    sections.forEach(id=>{ const el = document.getElementById(id); if(el) secObserver.observe(el); });
+
+    /* ==================== Parallaxe bulles (doux) ==================== */
+    const bubbles = document.querySelectorAll('.parallax-bubble');
+    document.addEventListener('mousemove', (e)=>{
+      const x = (e.clientX / window.innerWidth - .5) * 10;
+      const y = (e.clientY / window.innerHeight - .5) * 10;
+      bubbles.forEach((b,i)=>{ b.style.transform = `translate(${x*(i+1)}px, ${y*(i+1)}px)`; });
+    });
+
+    /* ==================== Effet typing (rôles) ==================== */
+    const typingEl = document.getElementById('typing');
+    const roles = ['Développeuse Web', 'Initiation au codage', 'Robotique pédagogique'];
+    let r = 0, ch = 0, del = false;
+    const type = () => {
+      const word = roles[r];
+      typingEl.textContent = word.slice(0, ch);
+      if(!del && ch < word.length){ ch++; }
+      else if(del && ch > 0){ ch--; }
+      else { del = !del; if(!del){ r = (r+1) % roles.length; } }
+      setTimeout(type, del ? 50 : 90);
+    };
+    type();
+  </script>
+
+  <!-- competence -->
+   <script src="script.js" defer></script>
+</body>
+</html>
